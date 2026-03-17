@@ -11,7 +11,7 @@ workflows:
       xcode: latest
       cocoapods: default
       vars:
-        BUNDLE_ID: "com.yourcompany.ebookconverter" # 替换为你的Bundle ID
+        BUNDLE_ID: "com.yiyuqiao.ebookconverter" # 已配置正确的Bundle ID
         APP_STORE_CONNECT_ISSUER_ID: Encrypted(...) # 可选：App Store Connect Issuer ID
         APP_STORE_CONNECT_KEY_IDENTIFIER: Encrypted(...) # 可选：Key ID
         APP_STORE_CONNECT_PRIVATE_KEY: Encrypted(...) # 可选：私钥内容
@@ -20,14 +20,25 @@ workflows:
       - name: Install Flutter dependencies
         script: |
           flutter pub get
+      - name: Verify Flutter configuration
+        script: |
+          flutter doctor
+          flutter --version
       - name: Install iOS dependencies
         script: |
           cd ios
-          pod install
+          pod deintegrate
+          pod install --repo-update
+          cd ..
+      - name: Verify Xcode project configuration
+        script: |
+          cd ios
+          xcodebuild -list -project Runner.xcodeproj
           cd ..
       - name: Build iOS IPA
         script: |
-          flutter build ipa --release --export-options-plist=$CM_EXPORT_OPTIONS_PLIST
+          flutter build ipa --release --export-options-plist=$CM_EXPORT_OPTIONS_PLIST \
+            --build-name=2.0.0 --build-number=1
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
