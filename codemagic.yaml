@@ -30,35 +30,40 @@ workflows:
         script: |
           # Recreate iOS project files compatible with current Xcode version
           flutter create --platforms=ios --overwrite .
-      - name: Install iOS dependencies
-        script: |
-          cd ios
-          pod deintegrate
-          pod install --repo-update
-          cd ..
-      # 暂时跳过Xcode项目验证，避免版本不兼容错误
-      # - name: Verify Xcode project configuration
-      #   script: |
-      #     cd ios
-      #     xcodebuild -list -project Runner.xcodeproj
-      #     cd ..
-      - name: Build iOS IPA
+      - name: Build iOS archive
         script: |
           # 未配置签名时使用此命令构建未签名IPA（仅用于测试构建流程）
           flutter build ipa --release --no-codesign \
             --build-name=2.0.0 --build-number=1
-
-          # 配置好iOS自动签名后，替换为以下命令：
-          # flutter build ipa --release --export-options-plist=$CM_EXPORT_OPTIONS_PLIST \
-          #   --build-name=2.0.0 --build-number=1
+      - name: Export unsigned IPA from archive
+        script: |
+          # 创建IPA输出目录
+          mkdir -p build/ios/ipa
+          # 手动导出未签名IPA
+          xcodebuild -exportArchive \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist <(echo '<?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+            <plist version="1.0">
+            <dict>
+              <key>method</key>
+              <string>development</string>
+              <key>signingStyle</key>
+              <string>manual</string>
+              <key>signingCertificate</key>
+              <string>-</string>
+            </dict>
+            </plist>')
     artifacts:
       - build/ios/ipa/*.ipa
+      - build/ios/archive/*.xcarchive
       - /tmp/xcodebuild_logs/*.log
       - flutter_drive.log
     publishing:
       email:
         recipients:
-          - your-email@example.com # 替换为你的邮箱
+          - 358420938@qq.com # 已替换为你的邮箱
         notify:
           success: true
           failure: true
