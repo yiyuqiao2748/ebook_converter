@@ -1,0 +1,53 @@
+# Codemagic 配置文件
+# 自动编译 Flutter iOS 应用
+# 详细说明：https://docs.codemagic.io/yaml-basic-configuration/yaml-getting-started/
+
+workflows:
+  flutter-ios-build:
+    name: Flutter iOS Build
+    max_build_duration: 30
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        BUNDLE_ID: "com.yourcompany.ebookconverter" # 替换为你的Bundle ID
+        APP_STORE_CONNECT_ISSUER_ID: Encrypted(...) # 可选：App Store Connect Issuer ID
+        APP_STORE_CONNECT_KEY_IDENTIFIER: Encrypted(...) # 可选：Key ID
+        APP_STORE_CONNECT_PRIVATE_KEY: Encrypted(...) # 可选：私钥内容
+        CERTIFICATE_PRIVATE_KEY: Encrypted(...) # 可选：证书私钥
+    scripts:
+      - name: Install Flutter dependencies
+        script: |
+          flutter pub get
+      - name: Install iOS dependencies
+        script: |
+          cd ios
+          pod install
+          cd ..
+      - name: Build iOS IPA
+        script: |
+          flutter build ipa --release --export-options-plist=$CM_EXPORT_OPTIONS_PLIST
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com # 替换为你的邮箱
+        notify:
+          success: true
+          failure: true
+      # 可选：自动上传到 App Store Connect
+      # app_store_connect:
+      #   api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+      #   key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+      #   issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+      #   submit_to_testflight: true
+
+# 快速开始指南：
+# 1. 将此文件命名为 codemagic.yaml 放在项目根目录
+# 2. 推送到你的 GitHub/GitLab 仓库
+# 3. 在 Codemagic 控制台导入项目
+# 4. 无需额外配置，自动识别此配置文件开始构建
