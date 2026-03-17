@@ -12,10 +12,12 @@ workflows:
       cocoapods: default
       vars:
         BUNDLE_ID: "com.yiyuqiao.ebookconverter" # 已配置正确的Bundle ID
-        APP_STORE_CONNECT_ISSUER_ID: Encrypted(...) # 可选：App Store Connect Issuer ID
-        APP_STORE_CONNECT_KEY_IDENTIFIER: Encrypted(...) # 可选：Key ID
-        APP_STORE_CONNECT_PRIVATE_KEY: Encrypted(...) # 可选：私钥内容
-        CERTIFICATE_PRIVATE_KEY: Encrypted(...) # 可选：证书私钥
+        # 注意：以下变量需要你在Codemagic控制台中自己添加加密变量
+        # 不要直接复制其他项目的Encrypted(...)值，每个团队的加密密钥不同
+        # APP_STORE_CONNECT_ISSUER_ID: （在Codemagic控制台中添加）
+        # APP_STORE_CONNECT_KEY_IDENTIFIER: （在Codemagic控制台中添加）
+        # APP_STORE_CONNECT_PRIVATE_KEY: （在Codemagic控制台中添加）
+        # CERTIFICATE_PRIVATE_KEY: （在Codemagic控制台中添加）
     scripts:
       - name: Install Flutter dependencies
         script: |
@@ -50,7 +52,8 @@ workflows:
         notify:
           success: true
           failure: true
-      # 可选：自动上传到 App Store Connect
+      # 注意：App Store Connect自动上传需要先配置加密变量
+      # 请先在Codemagic控制台添加相关变量后再启用以下配置
       # app_store_connect:
       #   api_key: $APP_STORE_CONNECT_PRIVATE_KEY
       #   key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER

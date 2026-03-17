@@ -12,6 +12,13 @@
    - **Scheme**: `Runner`
    - **Output type**: `IPA`
 
+### 重要：加密变量问题解决
+
+如果你看到 `Invalid encryption key` 错误：
+- ❌ 不要直接复制其他项目的 `Encrypted(...)` 值，每个团队的加密密钥不同
+- ✅ 所有加密变量必须在**当前团队**的Codemagic控制台中重新添加
+- 本项目的`codemagic.yaml`中已移除所有示例加密变量，你可以安全使用
+
 ### 2. 环境变量配置（可选，用于App Store上传）
 
 如果需要自动上传到App Store Connect，请在Codemagic控制台的"Environment variables"中添加以下变量：
