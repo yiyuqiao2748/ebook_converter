@@ -41,21 +41,21 @@ workflows:
           mkdir -p build/ios/ipa
           # 先创建导出选项文件（解决权限问题）
           cat > /tmp/exportOptions.plist << 'EOF'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-  <key>method</key>
-  <string>development</string>
-  <key>signingStyle</key>
-  <string>manual</string>
-  <key>signingCertificate</key>
-  <string>-</string>
-  <key>teamID</key>
-  <string>PLACEHOLDER_TEAM_ID</string>
-</dict>
-</plist>
-EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>development</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>signingCertificate</key>
+            <string>-</string>
+            <key>teamID</key>
+            <string>PLACEHOLDER_TEAM_ID</string>
+          </dict>
+          </plist>
+          EOF
           # 手动导出未签名IPA
           xcodebuild -exportArchive \
             -archivePath build/ios/archive/Runner.xcarchive \
