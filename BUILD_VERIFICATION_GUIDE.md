@@ -19,6 +19,11 @@
 - ✅ 所有加密变量必须在**当前团队**的Codemagic控制台中重新添加
 - 本项目的`codemagic.yaml`中已移除所有示例加密变量，你可以安全使用
 
+如果你看到 `"" property list does not exist` 错误：
+- ❌ 原因：构建命令中使用了`$CM_EXPORT_OPTIONS_PLIST`变量，但未配置iOS代码签名，该变量未生成
+- ✅ 临时解决：使用`--no-codesign`参数构建未签名IPA（仅用于测试构建流程）
+- ✅ 永久解决：在Codemagic控制台配置iOS自动代码签名（需要苹果开发者账号）
+
 ### 2. 环境变量配置（可选，用于App Store上传）
 
 如果需要自动上传到App Store Connect，请在Codemagic控制台的"Environment variables"中添加以下变量：
