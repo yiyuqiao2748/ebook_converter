@@ -8,7 +8,7 @@ workflows:
     max_build_duration: 30
     environment:
       flutter: stable
-      xcode: 15.4
+      xcode: 15.3
       cocoapods: default
       vars:
         BUNDLE_ID: "com.yiyuqiao.ebookconverter" # 已配置正确的Bundle ID
@@ -26,6 +26,10 @@ workflows:
         script: |
           flutter doctor
           flutter --version
+      - name: Regenerate iOS project files (fix Xcode compatibility)
+        script: |
+          # Recreate iOS project files compatible with current Xcode version
+          flutter create --platforms=ios --overwrite .
       - name: Install iOS dependencies
         script: |
           cd ios
