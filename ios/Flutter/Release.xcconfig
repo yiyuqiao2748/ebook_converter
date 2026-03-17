@@ -1,0 +1,4 @@
+#include "Generated.xcconfig"
+#include "pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"
+
+ENABLE_BITCODE = NO
